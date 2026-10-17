@@ -1,0 +1,31 @@
+{
+  "dependencyCount": 104,
+  "displayTargetFile": "package-lock.json",
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "hasUnknownVersions": false,
+  "ignoreSettings": {
+    "adminOnly": false,
+    "autoApproveIgnores": false,
+    "disregardFilesystemIgnores": false,
+    "reasonRequired": false
+  },
+  "isPrivate": true,
+  "licensesPolicy": {
+    "orgLicenseRules": null,
+    "severities": null
+  },
+  "ok": true,
+  "org": "persuasivepost",
+  "packageManager": "npm",
+  "path": "/home/ashserver/AshWorks/synk-demo/after",
+  "policy": "",
+  "projectName": "snyk-demo-after",
+  "summary": "No known vulnerabilities",
+  "targetFile": "",
+  "uniqueCount": 0,
+  "vulnerabilities": []
+}

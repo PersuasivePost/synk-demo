@@ -21,7 +21,7 @@ echo "=== [$VERSION] 2/3  Snyk Open Source scan (dependencies) ==="
 snyk test --json-file-output="$ROOT/results/$VERSION-deps.json"
 
 echo "=== [$VERSION] 3/3  Snyk Container scan (Docker image) ==="
-docker build -t "snyk-demo:$VERSION" .
+docker build -t "snyk-demo:$VERSION" . || { echo "Docker build failed - fix it, then re-run."; exit 1; }
 snyk container test "snyk-demo:$VERSION" --file=Dockerfile \
   --json-file-output="$ROOT/results/$VERSION-image.json"
 
