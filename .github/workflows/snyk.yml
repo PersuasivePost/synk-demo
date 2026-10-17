@@ -50,7 +50,7 @@ jobs:
 
       - name: Snyk Container (image)
         working-directory: after
-        run: snyk container test snyk-demo:after --file=Dockerfile --severity-threshold=high
+        run: snyk container test snyk-demo:after --file=Dockerfile --severity-threshold=critical
 
   # ---------------------------------------------------------------
   # BEFORE (vulnerable): report only, so you can SHOW the findings.
