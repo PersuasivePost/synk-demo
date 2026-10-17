@@ -1,0 +1,101 @@
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ---------------------------------------------------------------
+  # AFTER (remediated): this is the quality gate.
+  # The build FAILS if Snyk finds any HIGH or CRITICAL issue.
+  # ---------------------------------------------------------------
+  scan-after:
+    name: Snyk gate - remediated app
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Snyk token
+        run: |
+          if [ -z "$SNYK_TOKEN" ]; then
+            echo "::error::SNYK_TOKEN secret is not set (Repo > Settings > Secrets and variables > Actions)"
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Install dependencies
+        working-directory: after
+        run: npm ci
+
+      - name: Snyk Open Source (dependencies)
+        working-directory: after
+        run: snyk test --severity-threshold=high
+
+      - name: Build Docker image
+        working-directory: after
+        run: docker build -t snyk-demo:after .
+
+      - name: Snyk Container (image)
+        working-directory: after
+        run: snyk container test snyk-demo:after --file=Dockerfile --severity-threshold=high
+
+  # ---------------------------------------------------------------
+  # BEFORE (vulnerable): report only, so you can SHOW the findings.
+  # It is expected to report problems; it never fails the workflow.
+  # ---------------------------------------------------------------
+  scan-before:
+    name: Snyk report - vulnerable app (expected to find issues)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Install dependencies
+        working-directory: before
+        run: npm ci
+
+      - name: Snyk Open Source (dependencies)
+        working-directory: before
+        run: snyk test --severity-threshold=high --json-file-output=../before-deps.json
+
+      - name: Build Docker image
+        if: always()
+        working-directory: before
+        run: docker build -t snyk-demo:before .
+
+      - name: Snyk Container (image)
+        if: always()
+        working-directory: before
+        run: snyk container test snyk-demo:before --file=Dockerfile --severity-threshold=high --json-file-output=../before-image.json
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snyk-before-reports
+          path: before-*.json
+          if-no-files-found: ignore

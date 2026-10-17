@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Snyk Demo App</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 3rem auto; padding: 0 1rem; color: #1e293b; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: .5rem; border-bottom: 1px solid #e2e8f0; }
+    small { color: #64748b; }
+  </style>
+</head>
+<body>
+  <h1>Inventory demo</h1>
+  <small>Rendered <%= now %></small>
+  <table>
+    <tr><th>Name</th><th>Qty</th><th>Price</th></tr>
+    <% products.forEach(function (p) { %>
+      <tr><td><%= p.name %></td><td><%= p.qty %></td><td>₹<%= p.price %></td></tr>
+    <% }) %>
+  </table>
+</body>
+</html>

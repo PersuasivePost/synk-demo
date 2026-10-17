@@ -1,0 +1,18 @@
+{
+  "name": "snyk-demo-before",
+  "version": "1.0.0",
+  "description": "INTENTIONALLY VULNERABLE demo app - old pinned dependencies. Do not deploy.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "0.18.0",
+    "ejs": "2.5.7",
+    "express": "4.16.0",
+    "jsonwebtoken": "8.3.0",
+    "lodash": "4.17.4",
+    "minimist": "1.2.0",
+    "moment": "2.19.1"
+  }
+}
